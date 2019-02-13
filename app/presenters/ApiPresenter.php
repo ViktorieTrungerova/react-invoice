@@ -71,9 +71,9 @@ class ApiPresenter extends Nette\Application\UI\Presenter {
 	}
 
 
-	public function removeInvoice($id) {
-		$this->db->table('invoice_item')->where('invoice_id', $id);
-		$this->db->table('invoice')->where('id', $id);
+	public function actionRemoveInvoice($id) {
+		$this->db->table('invoice_item')->where('invoice_id', $id)->delete();
+		$this->db->table('invoice')->where('id', $id)->delete();
 		$this->payload->success = true;
 		$this->presenter->sendPayload();
 	}
