@@ -19,7 +19,6 @@ export class InvoiceForm extends React.Component {
                 client: this.props.client,
                 items: [
                     item,
-                    item,
                 ]
             };
             this.props.onSubmit(invoice);
