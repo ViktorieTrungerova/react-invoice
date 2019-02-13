@@ -12,7 +12,7 @@ export class invoiceClient {
     }
     saveInvoice(invoice) {
         return this.httpClient
-            .sendGetRequest(this.URL_SAVE_INVOCE, invoice);
+            .sendGetRequest(this.URL_SAVE_INVOCE, { invoice: JSON.stringify(invoice) });
     }
     removeInvoice(invoice) {
         return this.httpClient
@@ -119,7 +119,7 @@ export class invoiceClient {
             for (let index in data['clients']) {
                 let allClientsData = data['clients'][index];
                 allClients.push({
-                    client_id: allClientsData['id'],
+                    id: allClientsData['id'],
                     first_name: allClientsData['first_name'],
                     last_name: allClientsData['last_name'],
                     phone: allClientsData['phone'],

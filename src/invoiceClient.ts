@@ -7,7 +7,7 @@ export interface IInvoice {
 }
 
 export interface IClient {
-    client_id?: number;
+    id?: number;
     first_name: string;
     last_name: string;
     phone: string;
@@ -49,7 +49,7 @@ export class invoiceClient {
 
     saveInvoice(invoice: IInvoice) {
         return this.httpClient
-            .sendGetRequest(this.URL_SAVE_INVOCE , invoice);
+            .sendGetRequest(this.URL_SAVE_INVOCE , {invoice: JSON.stringify(invoice)});
     }
 
     removeInvoice(invoice: IInvoice) {
@@ -176,7 +176,7 @@ export class invoiceClient {
                 for (let index in data['clients']) {
                     let allClientsData = data['clients'][index];
                     allClients.push({
-                        client_id: allClientsData['id'],
+                        id: allClientsData['id'],
                         first_name: allClientsData['first_name'],
                         last_name: allClientsData['last_name'],
                         phone: allClientsData['phone'],

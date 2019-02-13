@@ -23,4 +23,26 @@ export default class HttpClient {
             });
         });
     }
+    /**
+     * Send http request by method POST
+     * @param {string} url
+     * @param {object} args
+     * @returns {Promise}
+     */
+    sendPostRequest(url, args) {
+        let self = this;
+        return new Promise(function (reseolve, reject) {
+            console.log(args);
+            request
+                .post(self.baseUrl + url)
+                .query(args)
+                .set('Content-Type', 'application/json')
+                .then(function (response) {
+                if (response.statusCode === 200)
+                    reseolve(JSON.parse(response.text));
+                else
+                    reject();
+            });
+        });
+    }
 }
