@@ -18,26 +18,19 @@ export class Invoices extends React.Component {
                 show: false
             });
         };
-        this.handleSaveInvoice = () => {
+        this.handleSaveInvoice = (invoice) => {
+            this.invoiceClient.saveInvoice(invoice);
         };
         this.invoiceClient = new invoiceClient('http://localhost/react-invoice/www');
         this.invoiceClient.getTaxes().then((taxes) => {
-            console.log('dane', taxes);
             this.setState({
                 taxes: taxes,
             });
         });
-        this.invoiceClient.getInvoice(1).then((invoice) => {
-            console.log('faktura', invoice);
-        });
         this.invoiceClient.getClients().then((clients) => {
-            console.log('klienti', clients);
             this.setState({
                 clients: clients,
             });
-        });
-        this.invoiceClient.getAllInvoices().then((invoices) => {
-            console.log('faktury', invoices);
         });
         this.state = {
             show: false,

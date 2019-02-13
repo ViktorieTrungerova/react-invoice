@@ -21,26 +21,16 @@ export class Invoices extends React.Component<{}, IInvoicesState> {
         this.invoiceClient = new invoiceClient('http://localhost/react-invoice/www');
 
         this.invoiceClient.getTaxes().then((taxes: Array<ITaX>) => {
-           console.log('dane', taxes);
             this.setState({
                 taxes: taxes,
             });
         });
 
-        this.invoiceClient.getInvoice(1).then( (invoice) => { // @todo tady je neco v pi nejde nastavit dataovy typ
-            console.log('faktura' , invoice);
-        });
-
         this.invoiceClient.getClients().then( (clients: Array<IClient>) => {
-            console.log('klienti' , clients);
             this.setState({
                 clients: clients,
             });
         });
-        this.invoiceClient.getAllInvoices().then( (invoices: Array<IInvoice>) => {
-                    console.log('faktury' , invoices);
-                });
-
 
         this.state = {
             show: false,
@@ -86,8 +76,8 @@ export class Invoices extends React.Component<{}, IInvoicesState> {
         })
     };
 
-    handleSaveInvoice= () => {
-
+    handleSaveInvoice= (invoice: IInvoice) => {
+        this.invoiceClient.saveInvoice(invoice);
     };
 }
 

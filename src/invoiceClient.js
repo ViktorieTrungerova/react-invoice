@@ -5,21 +5,14 @@ export class invoiceClient {
         this.URL_GET_INVOICE = '/api/invoice/get';
         this.URL_GET_ALL_INVOICES = '/api/invoices';
         this.URL_GET_ALL_CLIENTS = '/api/clients';
-        this.URL_SAVE_INVOCES = '/api/invoice/save';
+        this.URL_SAVE_INVOCE = '/api/invoice/save';
         this.URL_REMOVE_INVOCE = '/api/invoice/remove';
         this.URL_UPDATE_INVOCE_ITEM = '/api/invoice/update-item';
         this.httpClient = new HttpClient(baseUrl);
     }
-    insertInvoiceItem(item) {
+    saveInvoice(invoice) {
         return this.httpClient
-            .sendGetRequest(this.URL_SAVE_INVOCES, {
-            id: item.id,
-            invoice_id: item.invoice_id,
-            name: item.name,
-            price_without_tax: item.price_without_tax,
-            price_with_tax: item.price_with_tax,
-            tax_percent: item.tax_percent,
-        });
+            .sendGetRequest(this.URL_SAVE_INVOCE, invoice);
     }
     removeInvoice(invoice) {
         return this.httpClient

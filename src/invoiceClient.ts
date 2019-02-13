@@ -1,13 +1,13 @@
 import HttpClient from './httpClient';
 
 export interface IInvoice {
-    id: number;
+    id?: number;
     client: IClient;
     items: Array<IInvoiceItem>;
 }
 
 export interface IClient {
-    client_id: number;
+    client_id?: number;
     first_name: string;
     last_name: string;
     phone: string;
@@ -15,8 +15,8 @@ export interface IClient {
 }
 
 export interface IInvoiceItem {
-    id: number;
-    invoice_id: number;
+    id?: number;
+    invoice_id?: number;
     name: string;
     price_without_tax: number;
     price_with_tax: number;
@@ -35,7 +35,7 @@ export class invoiceClient {
     readonly URL_GET_ALL_INVOICES = '/api/invoices';
 
     readonly URL_GET_ALL_CLIENTS = '/api/clients';
-    readonly URL_SAVE_INVOCES = '/api/invoice/save';
+    readonly URL_SAVE_INVOCE = '/api/invoice/save';
 
     readonly URL_REMOVE_INVOCE = '/api/invoice/remove';
     readonly URL_UPDATE_INVOCE_ITEM = '/api/invoice/update-item';
@@ -47,16 +47,9 @@ export class invoiceClient {
     }
 
 
-    insertInvoiceItem(item: IInvoiceItem) {
+    saveInvoice(invoice: IInvoice) {
         return this.httpClient
-            .sendGetRequest(this.URL_SAVE_INVOCES , {
-                id:  item.id,
-                invoice_id: item.invoice_id,
-                name: item.name,
-                price_without_tax: item.price_without_tax,
-                price_with_tax: item.price_with_tax,
-                tax_percent: item.tax_percent,
-            })
+            .sendGetRequest(this.URL_SAVE_INVOCE , invoice);
     }
 
     removeInvoice(invoice: IInvoice) {

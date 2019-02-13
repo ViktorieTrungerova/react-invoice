@@ -3,13 +3,13 @@ import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
 import {library} from "@fortawesome/fontawesome-svg-core";
-import {IClient, ITaX} from "../invoiceClient";
+import {IClient, IInvoice, ITaX} from "../invoiceClient";
 
 library.add(faPlus);
 
 interface IInvoiceFormProps {
     onSearchClient():void,
-    onSubmit(invoice):void,
+    onSubmit(invoice: IInvoice):void,
     client?: IClient,
     taxes: Array<ITaX>,
 }
@@ -23,6 +23,7 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
                     <Form.Label>Klient:</Form.Label>
                     <Form.Control readOnly
                         defaultValue={this.props.client ? (this.props.client.first_name + ' ' + this.props.client.last_name) : ''}
+                        name="client"
                     />
                     <div className={'text-align-r'}>
                         <Button variant="primary" onClick={this.props.onSearchClient}>
@@ -33,15 +34,19 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
                 <Row className={'margin-top'}>
                     <Col>
                         <Form.Label>Název:</Form.Label>
-                        <Form.Control type="text"/>
+                        <Form.Control type="text" name="name"/>
                     </Col>
                     <Col>
                         <Form.Label>Počet:</Form.Label>
-                        <Form.Control type="number"/>
+                        <Form.Control type="number" name="count"/>
                     </Col>
                     <Col>
-                        <Form.Label>Cena:</Form.Label>
-                        <Form.Control type="text"/>
+                        <Form.Label>Cena bez DPH:</Form.Label>
+                        <Form.Control type="text" name="priceWithoutTax"/>
+                    </Col>
+                    <Col>
+                        <Form.Label>Cena s DPH:</Form.Label>
+                        <Form.Control type="text" name="priceWithTax"/>
                     </Col>
                     <Col>
                         <Form.Label>Sazba daně:</Form.Label>
@@ -54,11 +59,11 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
                     </Col>
                     <Col>
                         <Form.Label>Cena celkem:</Form.Label>
-                        <Form.Control  readOnly />
+                        <Form.Control  readOnly name="priceTotal" />
                     </Col>
                 </Row>
                 <div  className={'text-align-r margin-top'}>
-                <Button>
+                <Button type="submit">
                     Uložit
                 </Button>
                 </div>
@@ -69,5 +74,19 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
     handleSubmit= (e) => {
         e.preventDefault();
 
+        const item= {
+            name: e.target.elements['name'].value,
+            price_without_tax: e.target.elements['priceWithoutTax'].value,
+            price_with_tax: e.target.elements['priceWithTax'].value,
+            tax_percent: e.target.elements['taxSelect'].value
+        };
+
+        const invoice = {
+            client: this.props.client,
+            items:[
+                item,
+            ]
+        };
+       this.props.onSubmit(invoice);
     }
 }

@@ -9,26 +9,42 @@ export class InvoiceForm extends React.Component {
         super(...arguments);
         this.handleSubmit = (e) => {
             e.preventDefault();
+            const item = {
+                name: e.target.elements['name'].value,
+                price_without_tax: e.target.elements['priceWithoutTax'].value,
+                price_with_tax: e.target.elements['priceWithTax'].value,
+                tax_percent: e.target.elements['taxSelect'].value
+            };
+            const invoice = {
+                client: this.props.client,
+                items: [
+                    item,
+                ]
+            };
+            this.props.onSubmit(invoice);
         };
     }
     render() {
         return (React.createElement(Form, { className: 'form', onSubmit: this.handleSubmit },
             React.createElement(Form.Group, null,
                 React.createElement(Form.Label, null, "Klient:"),
-                React.createElement(Form.Control, { readOnly: true, defaultValue: this.props.client ? (this.props.client.first_name + ' ' + this.props.client.last_name) : '' }),
+                React.createElement(Form.Control, { readOnly: true, defaultValue: this.props.client ? (this.props.client.first_name + ' ' + this.props.client.last_name) : '', name: "client" }),
                 React.createElement("div", { className: 'text-align-r' },
                     React.createElement(Button, { variant: "primary", onClick: this.props.onSearchClient },
                         React.createElement(FontAwesomeIcon, { icon: "plus" })))),
             React.createElement(Row, { className: 'margin-top' },
                 React.createElement(Col, null,
                     React.createElement(Form.Label, null, "N\u00E1zev:"),
-                    React.createElement(Form.Control, { type: "text" })),
+                    React.createElement(Form.Control, { type: "text", name: "name" })),
                 React.createElement(Col, null,
                     React.createElement(Form.Label, null, "Po\u010Det:"),
-                    React.createElement(Form.Control, { type: "number" })),
+                    React.createElement(Form.Control, { type: "number", name: "count" })),
                 React.createElement(Col, null,
-                    React.createElement(Form.Label, null, "Cena:"),
-                    React.createElement(Form.Control, { type: "text" })),
+                    React.createElement(Form.Label, null, "Cena bez DPH:"),
+                    React.createElement(Form.Control, { type: "text", name: "priceWithoutTax" })),
+                React.createElement(Col, null,
+                    React.createElement(Form.Label, null, "Cena s DPH:"),
+                    React.createElement(Form.Control, { type: "text", name: "priceWithTax" })),
                 React.createElement(Col, null,
                     React.createElement(Form.Label, null, "Sazba dan\u011B:"),
                     React.createElement(Form.Control, { as: "select", name: "taxSelect" }, this.props.taxes.map((tax) => {
@@ -39,9 +55,9 @@ export class InvoiceForm extends React.Component {
                     }))),
                 React.createElement(Col, null,
                     React.createElement(Form.Label, null, "Cena celkem:"),
-                    React.createElement(Form.Control, { readOnly: true }))),
+                    React.createElement(Form.Control, { readOnly: true, name: "priceTotal" }))),
             React.createElement("div", { className: 'text-align-r margin-top' },
-                React.createElement(Button, null, "Ulo\u017Eit"))));
+                React.createElement(Button, { type: "submit" }, "Ulo\u017Eit"))));
     }
     ;
 }
