@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use Nette;
+use Tracy\Debugger;
 
 class ApiPresenter extends Nette\Application\UI\Presenter {
 
@@ -53,9 +54,17 @@ class ApiPresenter extends Nette\Application\UI\Presenter {
 		$this->presenter->sendPayload();
 	}
 
-	public function saveInvoice(array $data) {
+	public function actionSaveInvoice() {
+		$data = $this->getParameters();
+		unset($data['action']);
 		$this->db->table('invoice')
-			->insert($data);
+			->insert(['id_client' => $data['id_client']]);
+
+		foreach ($data['items'] as $item) {
+			$this->db->table('invoice_item')
+				->insert($item);
+		}
+
 		$this->payload->success = true;
 		$this->presenter->sendPayload();
 	}
