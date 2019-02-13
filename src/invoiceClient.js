@@ -110,8 +110,8 @@ export class invoiceClient {
             for (let index in data['taxes']) {
                 let taxData = data['taxes'][index];
                 taxes.push({
-                    taxName: taxData['name'],
-                    taxPercent: taxData['tax_percent'],
+                    name: taxData['name'],
+                    percent: taxData['tax_percent'],
                 });
             }
             return taxes;
