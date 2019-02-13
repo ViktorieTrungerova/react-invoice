@@ -55,12 +55,13 @@ class ApiPresenter extends Nette\Application\UI\Presenter {
 	}
 
 	public function actionSaveInvoice() {
-		$data = $this->getParameters();
-		unset($data['action']);
-		$this->db->table('invoice')
-			->insert(['id_client' => $data['id_client']]);
+		$json = $this->getHttpRequest()->getQuery('invoice');
+		$data = json_decode($json, TRUE);
+		$invoiceRow = $this->db->table('invoice')
+			->insert(['id_client' => $data['client']['id']]);
 
 		foreach ($data['items'] as $item) {
+			$item['invoice_id'] = $invoiceRow->id;
 			$this->db->table('invoice_item')
 				->insert($item);
 		}
@@ -68,6 +69,7 @@ class ApiPresenter extends Nette\Application\UI\Presenter {
 		$this->payload->success = true;
 		$this->presenter->sendPayload();
 	}
+
 
 	public function removeInvoice($id) {
 		$this->db->table('invoice_item')->where('invoice_id', $id);
