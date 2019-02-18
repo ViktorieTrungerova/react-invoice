@@ -52,7 +52,7 @@ export class InvoiceForm extends React.Component {
                             React.createElement(Form.Control, { type: "text", name: "priceWithoutTax" })),
                         React.createElement(Col, null,
                             React.createElement(Form.Label, null, "Cena s DPH:"),
-                            React.createElement(Form.Control, { readOnly: true, type: "text", name: "priceWithTax" })),
+                            React.createElement(Form.Control, { type: "text", name: "priceWithTax" })),
                         React.createElement(Col, null,
                             React.createElement(Form.Label, null, "Sazba dan\u011B:"),
                             React.createElement(Form.Control, { as: "select", name: "taxSelect" }, this.props.taxes.map((tax) => {

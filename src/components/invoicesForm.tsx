@@ -55,7 +55,7 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
                             </Col>
                             <Col>
                                 <Form.Label>Cena s DPH:</Form.Label>
-                                <Form.Control readOnly type="text" name="priceWithTax">
+                                <Form.Control type="text" name="priceWithTax">
 
                                 </Form.Control>
                             </Col>
