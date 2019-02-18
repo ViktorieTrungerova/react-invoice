@@ -18,14 +18,21 @@ export class ClientList extends React.Component<IClientListProps, {}> {
         return(
             <Table>
                 <tbody>
+                <tr>
+                    <th>Jméno</th>
+                    <th>Příjmení</th>
+                    <th></th>
+                </tr>
                 {this.props.allClients.map( (client: IClient) => {
                     return (
                         <tr>
                             <td>{client.first_name}</td>
                             <td>{client.last_name}</td>
-                            <Button onClick={(e) => this.props.onAddClientToInvoice(client)}>
-                                Vybrat
-                            </Button>
+                            <td className={'text-align-r'}>
+                                <Button onClick={(e) => this.props.onAddClientToInvoice(client)}>
+                                    Vybrat
+                                </Button>
+                            </td>
                         </tr>)
                 })}
                 </tbody>

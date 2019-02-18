@@ -8,6 +8,8 @@ module.exports = {
     mode: "development",
     entry: {
         invoices: "./src/entry/invoices.tsx",
+        listingInvoices: "./src/entry/listingInvoices.tsx",
+        detailInvoice: "./src/entry/detailInvoice.tsx",
     },
     output: {
         filename: "[name].js",

@@ -1,9 +1,8 @@
 import * as React from "react";
-import {IClient, IInvoice, invoiceClient, ITaX} from "../invoiceClient";
+import {IClient, IInvoice, IInvoiceItem, invoiceClient, ITaX} from "../invoiceClient";
 import {InvoiceForm} from "./invoicesForm";
-import {Button, Container, Form, Modal} from "react-bootstrap";
+import {Container, Modal} from "react-bootstrap";
 import {ClientList} from "./clientList";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 interface IInvoicesState {
     show: boolean;
@@ -79,5 +78,6 @@ export class Invoices extends React.Component<{}, IInvoicesState> {
     handleSaveInvoice= (invoice: IInvoice) => {
         this.invoiceClient.saveInvoice(invoice);
     };
+
 }
 

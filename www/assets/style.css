@@ -7,6 +7,30 @@
     margin-top: 1rem;
 }
 
+.margin-left {
+    margin-left: 1rem;
+}
+
 .text-align-r {
     text-align: right;
 }
+
+.text-align-center {
+    text-align: center;
+}
+
+.btn-add-client {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+}
+
+.btn-add-client button{
+    padding: .65rem;
+}
+
+.position-bottom {
+    display: flex;
+    align-items: flex-end;
+}
+

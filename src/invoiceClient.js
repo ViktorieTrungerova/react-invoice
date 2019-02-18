@@ -23,6 +23,7 @@ export class invoiceClient {
             id: item.id,
             invoice_id: item.invoice_id,
             name: item.name,
+            count: item.count,
             price_without_tax: item.price_without_tax,
             price_with_tax: item.price_with_tax,
             tax_percent: item.tax_percent,
@@ -40,6 +41,7 @@ export class invoiceClient {
                     id: invoiceItemData['id'],
                     invoice_id: invoiceItemData['invoice_id'],
                     items_name: invoiceItemData['name'],
+                    count: invoiceItemData['count'],
                     priceWithoutTax: invoiceItemData['price_without_tax'],
                     priceWithTax: invoiceItemData['price_with_tax'],
                     taxPercent: invoiceItemData['tax_percent'],
@@ -59,7 +61,6 @@ export class invoiceClient {
             return invoice;
         });
     }
-    // @todo DODELAT - nechce se mi zobrazovat items
     getAllInvoices() {
         return this.httpClient
             .sendGetRequest(this.URL_GET_ALL_INVOICES, {})
@@ -75,6 +76,7 @@ export class invoiceClient {
                         id: invoiceItemData['id'],
                         invoice_id: invoiceItemData['invoice_id'],
                         items_name: invoiceItemData['name'],
+                        count: invoiceItemData['count'],
                         priceWithoutTax: invoiceItemData['price_without_tax'],
                         priceWithTax: invoiceItemData['price_with_tax'],
                         taxPercent: invoiceItemData['tax_percent'],
@@ -110,7 +112,6 @@ export class invoiceClient {
             return taxes;
         });
     }
-    // @todo KONTROLA? funguje spravne,
     getClients() {
         return this.httpClient
             .sendGetRequest(this.URL_GET_ALL_CLIENTS, {})
