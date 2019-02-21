@@ -7,6 +7,9 @@ library.add(faPlus);
 export class InvoiceForm extends React.Component {
     constructor() {
         super(...arguments);
+        this.calculatePriceWithTax = () => {
+            return (100 + this.props.tax_percent) * this.props.price_without_tax / 100;
+        };
         this.handleSubmit = (e) => {
             e.preventDefault();
             const item = {
@@ -24,6 +27,22 @@ export class InvoiceForm extends React.Component {
             };
             this.props.onSubmit(invoice);
             location.replace("http://localhost/react-invoice/www/listingInvoices.html");
+        };
+        this.handleChangeCount = (e) => {
+            const count = e.target.value;
+            this.props.onChangeCount(count);
+        };
+        this.handleChangePriceWithoutTax = (e) => {
+            const price_without_tax = e.target.value;
+            this.props.onChangePriceWithoutTax(price_without_tax);
+        };
+        this.handleChangeTax = (e) => {
+            const tax_percent = Number(e.target.value);
+            this.props.onChangeTax(tax_percent);
+        };
+        this.handleChangeTotalPrice = (e) => {
+            const total_price = e.target.value;
+            this.props.onChangeTotalPrice(total_price);
         };
     }
     render() {
@@ -46,24 +65,24 @@ export class InvoiceForm extends React.Component {
                             React.createElement(Form.Control, { type: "text", name: "name" })),
                         React.createElement(Col, null,
                             React.createElement(Form.Label, null, "Po\u010Det:"),
-                            React.createElement(Form.Control, { type: "number", name: "count" })),
+                            React.createElement(Form.Control, { type: "number", name: "count", onChange: this.handleChangeCount })),
                         React.createElement(Col, null,
                             React.createElement(Form.Label, null, "Cena bez DPH:"),
-                            React.createElement(Form.Control, { type: "text", name: "priceWithoutTax" })),
-                        React.createElement(Col, null,
-                            React.createElement(Form.Label, null, "Cena s DPH:"),
-                            React.createElement(Form.Control, { type: "text", name: "priceWithTax" })),
+                            React.createElement(Form.Control, { type: "text", name: "priceWithoutTax", onChange: this.handleChangePriceWithoutTax })),
                         React.createElement(Col, null,
                             React.createElement(Form.Label, null, "Sazba dan\u011B:"),
-                            React.createElement(Form.Control, { as: "select", name: "taxSelect" }, this.props.taxes.map((tax) => {
+                            React.createElement(Form.Control, { as: "select", name: "taxSelect", onChange: this.handleChangeTax }, this.props.taxes.map((tax) => {
                                 return (React.createElement("option", { value: tax.percent },
                                     tax.percent,
                                     " - ",
                                     tax.name));
                             }))),
                         React.createElement(Col, null,
+                            React.createElement(Form.Label, null, "Cena s DPH:"),
+                            React.createElement(Form.Control, { readOnly: true, type: "text", name: "priceWithTax", value: (this.calculatePriceWithTax()).toString() })),
+                        React.createElement(Col, null,
                             React.createElement(Form.Label, null, "Cena celkem:"),
-                            React.createElement(Form.Control, { readOnly: true, name: "priceTotal" })),
+                            React.createElement(Form.Control, { readOnly: true, name: "priceTotal", value: (this.props.count * this.calculatePriceWithTax()).toString(), onChange: this.handleChangeTotalPrice })),
                         React.createElement(Col, { className: 'position-bottom' },
                             React.createElement(Button, null, "P\u0159idat polo\u017Eku"),
                             React.createElement(Button, { className: 'margin-left', variant: 'danger' }, "Odebrat polo\u017Eku")))),

@@ -9,6 +9,10 @@ interface IInvoicesState {
     clients: Array<IClient>,
     client?: IClient,
     taxes: Array<ITaX>,
+    count: number,
+    price_without_tax: number,
+    tax_percent: number,
+    total_price:number,
 }
 
 export class Invoices extends React.Component<{}, IInvoicesState> {
@@ -35,6 +39,10 @@ export class Invoices extends React.Component<{}, IInvoicesState> {
             show: false,
             clients: [],
             taxes:[],
+            count: 0,
+            price_without_tax: 0,
+            tax_percent: 0,
+            total_price: 0,
         };
     }
 
@@ -46,7 +54,19 @@ export class Invoices extends React.Component<{}, IInvoicesState> {
 
             <div>
                 <Container className={'page-content'}>
-                    <InvoiceForm onSearchClient={this.handleShow} client={this.state.client} taxes={this.state.taxes} onSubmit={this.handleSaveInvoice}/>
+                    <InvoiceForm
+                        onSearchClient={this.handleShow}
+                        client={this.state.client}
+                        taxes={this.state.taxes}
+                        onSubmit={this.handleSaveInvoice}
+                        onChangeCount={this.handleSetCount}
+                        onChangePriceWithoutTax={this.handleSetPriceWithoutTax}
+                        count={this.state.count}
+                        price_without_tax={this.state.price_without_tax}
+                        tax_percent={this.state.tax_percent}
+                        onChangeTax={this.handleSetTax}
+                        onChangeTotalPrice={this.handleSetTotalPrice}
+                    />
                     <Modal show={this.state.show} onHide={this.handleClose}>
                         <Modal.Header closeButton>
                             <Modal.Title>Výpis klientů</Modal.Title>
@@ -77,6 +97,30 @@ export class Invoices extends React.Component<{}, IInvoicesState> {
 
     handleSaveInvoice= (invoice: IInvoice) => {
         this.invoiceClient.saveInvoice(invoice);
+    };
+
+    handleSetCount= (count) => {
+        this.setState({
+            count: count
+        })
+    };
+
+    handleSetPriceWithoutTax= (price_without_tax) => {
+        this.setState({
+            price_without_tax: price_without_tax,
+        })
+    };
+
+    handleSetTax= (tax_percent) => {
+        this.setState({
+            tax_percent: tax_percent,
+        })
+    };
+
+    handleSetTotalPrice= (total_price) => {
+        this.setState({
+            tax_percent: total_price,
+        })
     };
 
 }

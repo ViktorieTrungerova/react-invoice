@@ -10,11 +10,22 @@ library.add(faPlus);
 interface IInvoiceFormProps {
     onSearchClient():void,
     onSubmit(invoice: IInvoice):void,
+    onChangeCount(count):void,
+    onChangePriceWithoutTax(priceWithoutTax):void,
+    onChangeTax(tax_percent):void,
+    onChangeTotalPrice(total_price):void,
     client?: IClient,
     taxes: Array<ITaX>,
+    count: number,
+    price_without_tax: number,
+    tax_percent: number,
 }
 
 export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
+
+    calculatePriceWithTax = (): number => {
+        return ( 100 + this.props.tax_percent) * this.props.price_without_tax / 100;
+    };
 
     render(){
         return(
@@ -47,30 +58,47 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
                             </Col>
                             <Col>
                                 <Form.Label>Počet:</Form.Label>
-                                <Form.Control type="number" name="count"/>
+                                <Form.Control
+                                    type="number"
+                                    name="count"
+                                    onChange={this.handleChangeCount}
+                                />
                             </Col>
                             <Col>
                                 <Form.Label>Cena bez DPH:</Form.Label>
-                                <Form.Control type="text" name="priceWithoutTax"/>
-                            </Col>
-                            <Col>
-                                <Form.Label>Cena s DPH:</Form.Label>
-                                <Form.Control type="text" name="priceWithTax">
+                                <Form.Control
+                                    type="text"
+                                    name="priceWithoutTax"
+                                    onChange={this.handleChangePriceWithoutTax}
+                                />
 
-                                </Form.Control>
                             </Col>
                             <Col>
                                 <Form.Label>Sazba daně:</Form.Label>
 
-                                <Form.Control as="select" name="taxSelect">
+                                <Form.Control as="select" name="taxSelect" onChange={this.handleChangeTax}>
                                     {this.props.taxes.map((tax: ITaX) => {
                                         return ( <option value={tax.percent}>{tax.percent} - {tax.name}</option>);
                                     })}
                                 </Form.Control>
                             </Col>
                             <Col>
+                                <Form.Label>Cena s DPH:</Form.Label>
+                                <Form.Control
+                                    readOnly
+                                    type="text"
+                                    name="priceWithTax"
+                                    value={(this.calculatePriceWithTax()).toString()}
+                                />
+                            </Col>
+                            <Col>
                                 <Form.Label>Cena celkem:</Form.Label>
-                                <Form.Control  readOnly name="priceTotal" />
+                                <Form.Control
+                                    readOnly
+                                    name="priceTotal"
+                                    value={(this.props.count * this.calculatePriceWithTax()).toString()}
+                                    onChange={this.handleChangeTotalPrice}
+                                />
                             </Col>
                             <Col className={'position-bottom'}>
                                 <Button>
@@ -113,4 +141,26 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
        this.props.onSubmit(invoice);
        location.replace("http://localhost/react-invoice/www/listingInvoices.html")
     };
+
+    handleChangeCount= (e) => {
+        const count= e.target.value;
+        this.props.onChangeCount(count);
+    };
+
+    handleChangePriceWithoutTax= (e) => {
+        const price_without_tax= e.target.value;
+        this.props.onChangePriceWithoutTax(price_without_tax);
+    };
+
+    handleChangeTax= (e) => {
+        const tax_percent= Number(e.target.value);
+        this.props.onChangeTax(tax_percent);
+    };
+
+
+    handleChangeTotalPrice= (e) => {
+        const total_price= e.target.value;
+        this.props.onChangeTotalPrice(total_price);
+    };
+
 }
