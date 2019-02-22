@@ -8,12 +8,14 @@ import {IClient, IInvoice, ITaX, IInvoiceItem} from "../invoiceClient";
 library.add(faPlus);
 
 interface IInvoiceFormProps {
-    onSearchClient():void,
-    onSubmit(invoice: IInvoice):void,
-    onChangeCount(count):void,
-    onChangePriceWithoutTax(priceWithoutTax):void,
-    onChangeTax(tax_percent):void,
-    onChangeTotalPrice(total_price):void,
+    onSearchClient(): void,
+    onSubmit(invoice: IInvoice): void,
+    onChangeCount(count): void,
+    onChangePriceWithoutTax(priceWithoutTax): void,
+    onChangeTax(tax_percent): void,
+    onChangeTotalPrice(total_price): void,
+    onAddRowItem(item: IInvoiceItem): void,
+    items: Array<IInvoiceItem>,
     client?: IClient,
     taxes: Array<ITaX>,
     count: number,
@@ -50,67 +52,77 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
                             </Col>
                         </Row>
                     </Form.Group>
-                    <div id={'items'}>
-                        <Row className={'margin-top'} id={'item'}>
-                            <Col>
-                                <Form.Label>Název:</Form.Label>
-                                <Form.Control type="text" name="name"/>
-                            </Col>
-                            <Col>
-                                <Form.Label>Počet:</Form.Label>
-                                <Form.Control
-                                    type="number"
-                                    name="count"
-                                    onChange={this.handleChangeCount}
-                                />
-                            </Col>
-                            <Col>
-                                <Form.Label>Cena bez DPH:</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    name="priceWithoutTax"
-                                    onChange={this.handleChangePriceWithoutTax}
-                                />
 
-                            </Col>
-                            <Col>
-                                <Form.Label>Sazba daně:</Form.Label>
+                    {this.props.items.map( (item: IInvoiceItem) => {
+                        return(
+                                <Row className={'margin-top'}>
+                                    <Col>
+                                        <Form.Label>Název:</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="name"
+                                        />
+                                    </Col>
+                                    <Col>
+                                        <Form.Label>Počet:</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            name="count"
+                                            onChange={this.handleChangeCount}
+                                        />
+                                    </Col>
+                                    <Col>
+                                        <Form.Label>Cena bez DPH:</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="priceWithoutTax"
+                                            onChange={this.handleChangePriceWithoutTax}
+                                        />
 
-                                <Form.Control as="select" name="taxSelect" onChange={this.handleChangeTax}>
-                                    {this.props.taxes.map((tax: ITaX) => {
-                                        return ( <option value={tax.percent}>{tax.percent} - {tax.name}</option>);
-                                    })}
-                                </Form.Control>
-                            </Col>
-                            <Col>
-                                <Form.Label>Cena s DPH:</Form.Label>
-                                <Form.Control
-                                    readOnly
-                                    type="text"
-                                    name="priceWithTax"
-                                    value={(this.calculatePriceWithTax()).toString()}
-                                />
-                            </Col>
-                            <Col>
-                                <Form.Label>Cena celkem:</Form.Label>
-                                <Form.Control
-                                    readOnly
-                                    name="priceTotal"
-                                    value={(this.props.count * this.calculatePriceWithTax()).toString()}
-                                    onChange={this.handleChangeTotalPrice}
-                                />
-                            </Col>
-                            <Col className={'position-bottom'}>
-                                <Button>
-                                    Přidat položku
-                                </Button>
-                                <Button className={'margin-left'} variant={'danger'}>
-                                    Odebrat položku
-                                </Button>
-                            </Col>
-                        </Row>
-                    </div>
+                                    </Col>
+                                    <Col>
+                                        <Form.Label>Sazba daně:</Form.Label>
+
+                                        <Form.Control
+                                            as="select"
+                                            name="taxSelect"
+                                            onChange={this.handleChangeTax}
+                                        >
+                                            {this.props.taxes.map((tax: ITaX) => {
+                                                return ( <option value={tax.percent}>{tax.percent} - {tax.name}</option>);
+                                            })}
+                                        </Form.Control>
+                                    </Col>
+                                    <Col>
+                                        <Form.Label>Cena s DPH:</Form.Label>
+                                        <Form.Control
+                                            readOnly
+                                            type="text"
+                                            name="priceWithTax"
+                                            value={(this.calculatePriceWithTax()).toString()}
+                                        />
+                                    </Col>
+                                    <Col>
+                                        <Form.Label>Cena celkem:</Form.Label>
+                                        <Form.Control
+                                            readOnly
+                                            name="priceTotal"
+                                            value={(this.props.count * this.calculatePriceWithTax()).toString()}
+                                            onChange={this.handleChangeTotalPrice}
+                                        />
+                                    </Col>
+                                    <Col className={'position-bottom'}>
+                                        <Button className={'margin-left'} variant={'danger'}>
+                                            Odebrat položku
+                                        </Button>
+                                    </Col>
+                                </Row>
+                        );
+                    })}
                     <div  className={'text-align-r margin-top'}>
+                        <Button className={'margin-right'} onClick={this.handleAddRowItem}>
+                            Přidat položku
+                        </Button>
                         <Button type="submit">
                             Uložit
                         </Button>
@@ -130,6 +142,7 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
             price_without_tax: e.target.elements['priceWithoutTax'].value,
             price_with_tax: e.target.elements['priceWithTax'].value,
             tax_percent: e.target.elements['taxSelect'].value
+
         };
 
         const invoice = {
@@ -161,6 +174,18 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
     handleChangeTotalPrice= (e) => {
         const total_price= e.target.value;
         this.props.onChangeTotalPrice(total_price);
+    };
+
+    handleAddRowItem= (e) => {
+        const item= {
+            name: '',
+            count: 0,
+            price_without_tax: 0,
+            price_with_tax: 0,
+            tax_percent: 0,
+        };
+        console.log(item);
+        this.props.onAddRowItem(item);
     };
 
 }

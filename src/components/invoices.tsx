@@ -13,6 +13,7 @@ interface IInvoicesState {
     price_without_tax: number,
     tax_percent: number,
     total_price:number,
+    items: Array<IInvoiceItem>,
 }
 
 export class Invoices extends React.Component<{}, IInvoicesState> {
@@ -39,6 +40,7 @@ export class Invoices extends React.Component<{}, IInvoicesState> {
             show: false,
             clients: [],
             taxes:[],
+            items:[],
             count: 0,
             price_without_tax: 0,
             tax_percent: 0,
@@ -61,11 +63,14 @@ export class Invoices extends React.Component<{}, IInvoicesState> {
                         onSubmit={this.handleSaveInvoice}
                         onChangeCount={this.handleSetCount}
                         onChangePriceWithoutTax={this.handleSetPriceWithoutTax}
+                        onAddRowItem={this.handleAddRowItem}
                         count={this.state.count}
                         price_without_tax={this.state.price_without_tax}
                         tax_percent={this.state.tax_percent}
                         onChangeTax={this.handleSetTax}
                         onChangeTotalPrice={this.handleSetTotalPrice}
+                        items={this.state.items}
+
                     />
                     <Modal show={this.state.show} onHide={this.handleClose}>
                         <Modal.Header closeButton>
@@ -122,6 +127,11 @@ export class Invoices extends React.Component<{}, IInvoicesState> {
             tax_percent: total_price,
         })
     };
+
+    handleAddRowItem= (item:IInvoiceItem) => {
+        this.state.items.push(item);
+        this.setState(this.state);
+    }
 
 }
 

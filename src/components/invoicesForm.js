@@ -44,6 +44,17 @@ export class InvoiceForm extends React.Component {
             const total_price = e.target.value;
             this.props.onChangeTotalPrice(total_price);
         };
+        this.handleAddRowItem = (e) => {
+            const item = {
+                name: '',
+                count: 0,
+                price_without_tax: 0,
+                price_with_tax: 0,
+                tax_percent: 0,
+            };
+            console.log(item);
+            this.props.onAddRowItem(item);
+        };
     }
     render() {
         return (React.createElement("div", null,
@@ -58,8 +69,8 @@ export class InvoiceForm extends React.Component {
                             React.createElement("div", { className: 'text-align-r' },
                                 React.createElement(Button, { variant: "primary", onClick: this.props.onSearchClient },
                                     React.createElement(FontAwesomeIcon, { icon: "plus" })))))),
-                React.createElement("div", { id: 'items' },
-                    React.createElement(Row, { className: 'margin-top', id: 'item' },
+                this.props.items.map((item) => {
+                    return (React.createElement(Row, { className: 'margin-top' },
                         React.createElement(Col, null,
                             React.createElement(Form.Label, null, "N\u00E1zev:"),
                             React.createElement(Form.Control, { type: "text", name: "name" })),
@@ -84,9 +95,10 @@ export class InvoiceForm extends React.Component {
                             React.createElement(Form.Label, null, "Cena celkem:"),
                             React.createElement(Form.Control, { readOnly: true, name: "priceTotal", value: (this.props.count * this.calculatePriceWithTax()).toString(), onChange: this.handleChangeTotalPrice })),
                         React.createElement(Col, { className: 'position-bottom' },
-                            React.createElement(Button, null, "P\u0159idat polo\u017Eku"),
-                            React.createElement(Button, { className: 'margin-left', variant: 'danger' }, "Odebrat polo\u017Eku")))),
+                            React.createElement(Button, { className: 'margin-left', variant: 'danger' }, "Odebrat polo\u017Eku"))));
+                }),
                 React.createElement("div", { className: 'text-align-r margin-top' },
+                    React.createElement(Button, { className: 'margin-right', onClick: this.handleAddRowItem }, "P\u0159idat polo\u017Eku"),
                     React.createElement(Button, { type: "submit" }, "Ulo\u017Eit")))));
     }
     ;

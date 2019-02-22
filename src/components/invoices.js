@@ -41,6 +41,10 @@ export class Invoices extends React.Component {
                 tax_percent: total_price,
             });
         };
+        this.handleAddRowItem = (item) => {
+            this.state.items.push(item);
+            this.setState(this.state);
+        };
         this.invoiceClient = new invoiceClient('http://localhost/react-invoice/www');
         this.invoiceClient.getTaxes().then((taxes) => {
             this.setState({
@@ -56,6 +60,7 @@ export class Invoices extends React.Component {
             show: false,
             clients: [],
             taxes: [],
+            items: [],
             count: 0,
             price_without_tax: 0,
             tax_percent: 0,
@@ -67,7 +72,7 @@ export class Invoices extends React.Component {
             return;
         return (React.createElement("div", null,
             React.createElement(Container, { className: 'page-content' },
-                React.createElement(InvoiceForm, { onSearchClient: this.handleShow, client: this.state.client, taxes: this.state.taxes, onSubmit: this.handleSaveInvoice, onChangeCount: this.handleSetCount, onChangePriceWithoutTax: this.handleSetPriceWithoutTax, count: this.state.count, price_without_tax: this.state.price_without_tax, tax_percent: this.state.tax_percent, onChangeTax: this.handleSetTax, onChangeTotalPrice: this.handleSetTotalPrice }),
+                React.createElement(InvoiceForm, { onSearchClient: this.handleShow, client: this.state.client, taxes: this.state.taxes, onSubmit: this.handleSaveInvoice, onChangeCount: this.handleSetCount, onChangePriceWithoutTax: this.handleSetPriceWithoutTax, onAddRowItem: this.handleAddRowItem, count: this.state.count, price_without_tax: this.state.price_without_tax, tax_percent: this.state.tax_percent, onChangeTax: this.handleSetTax, onChangeTotalPrice: this.handleSetTotalPrice, items: this.state.items }),
                 React.createElement(Modal, { show: this.state.show, onHide: this.handleClose },
                     React.createElement(Modal.Header, { closeButton: true },
                         React.createElement(Modal.Title, null, "V\u00FDpis klient\u016F")),
