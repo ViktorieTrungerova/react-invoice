@@ -2,6 +2,7 @@ import * as React from "react";
 import {IClient, IInvoice, IInvoiceItem, invoiceClient, ITaX} from "../invoiceClient";
 import {InvoiceForm} from "./invoicesForm";
 import {Container, Modal} from "react-bootstrap";
+import PNotify from 'pnotify/dist/es/PNotify';
 import {ClientList} from "./clientList";
 
 interface IInvoicesState {
@@ -10,9 +11,9 @@ interface IInvoicesState {
     client?: IClient,
     taxes: Array<ITaX>,
     count: number,
+    name: string,
     price_without_tax: number,
     tax_percent: number,
-    total_price:number,
     items: Array<IInvoiceItem>,
 }
 
@@ -44,7 +45,7 @@ export class Invoices extends React.Component<{}, IInvoicesState> {
             count: 0,
             price_without_tax: 0,
             tax_percent: 0,
-            total_price: 0,
+            name: '',
         };
     }
 
@@ -64,14 +65,11 @@ export class Invoices extends React.Component<{}, IInvoicesState> {
                         onChangeCount={this.handleSetCount}
                         onChangePriceWithoutTax={this.handleSetPriceWithoutTax}
                         onAddRowItem={this.handleAddRowItem}
-                        count={this.state.count}
-                        price_without_tax={this.state.price_without_tax}
-                        tax_percent={this.state.tax_percent}
+                        onChangeName={this.handleSetName}
+                        handleRemoveRowItem={this.handleRemoveRowItem}
                         onChangeTax={this.handleSetTax}
-                        onChangeTotalPrice={this.handleSetTotalPrice}
                         items={this.state.items}
-
-                    />
+                         />
                     <Modal show={this.state.show} onHide={this.handleClose}>
                         <Modal.Header closeButton>
                             <Modal.Title>Výpis klientů</Modal.Title>
@@ -102,36 +100,75 @@ export class Invoices extends React.Component<{}, IInvoicesState> {
 
     handleSaveInvoice= (invoice: IInvoice) => {
         this.invoiceClient.saveInvoice(invoice);
+        console.log(invoice);
     };
 
-    handleSetCount= (count) => {
-        this.setState({
-            count: count
-        })
+    handleSetCount= (count, item: IInvoiceItem) => {
+
+        this.state.items.map((stateItem: IInvoiceItem, index) => {
+            if (item === stateItem) {
+                this.state.items[index].count= count;
+            }
+        });
+        this.setState(this.state);
     };
 
-    handleSetPriceWithoutTax= (price_without_tax) => {
-        this.setState({
-            price_without_tax: price_without_tax,
-        })
+    handleSetPriceWithoutTax= (price_without_tax, item: IInvoiceItem) => {
+        this.state.items.map((stateItem: IInvoiceItem, index) => {
+            if (item === stateItem) {
+                this.state.items[index].price_without_tax = price_without_tax;
+            }
+
+        });
+        this.setState(this.state);
     };
 
-    handleSetTax= (tax_percent) => {
-        this.setState({
-            tax_percent: tax_percent,
-        })
+    handleSetTax= (tax_percent, item: IInvoiceItem) => {
+        this.state.items.map((stateItem: IInvoiceItem, index) => {
+            if (item === stateItem) {
+                this.state.items[index].tax_percent = tax_percent;
+            }
+
+        });
+        this.setState(this.state);
     };
 
-    handleSetTotalPrice= (total_price) => {
-        this.setState({
-            tax_percent: total_price,
-        })
+    handleSetName= (name, item: IInvoiceItem) => {
+        this.state.items.map((stateItem: IInvoiceItem, index) => {
+            if (item === stateItem) {
+                this.state.items[index].name = name;
+            }
+
+        });
+        this.setState(this.state);
     };
 
     handleAddRowItem= (item:IInvoiceItem) => {
         this.state.items.push(item);
         this.setState(this.state);
-    }
+    };
 
+    handleRemoveRowItem= (item: IInvoiceItem) => {
+        alert('Opravdu chtece položku odstranit?');
+        this.state.items.map((stateItem: IInvoiceItem, index, array) => {
+            if (item === stateItem) {
+                array.splice(index, 1);
+            }
+            this.setState(this.state);
+        });
+
+        PNotify.success({
+            text: "Položka byla odebrána",
+            type: 'notice',
+            delay: 2000,
+            stack: {
+                "dir1": "up",
+                "dir2": "left",
+                "firstpos1": 50,
+                "firstpos2": 25
+            }
+        });
+
+    };
 }
 

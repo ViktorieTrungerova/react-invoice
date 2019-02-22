@@ -10,24 +10,28 @@ library.add(faPlus);
 interface IInvoiceFormProps {
     onSearchClient(): void,
     onSubmit(invoice: IInvoice): void,
-    onChangeCount(count): void,
-    onChangePriceWithoutTax(priceWithoutTax): void,
-    onChangeTax(tax_percent): void,
-    onChangeTotalPrice(total_price): void,
+    onChangeCount(count, item: IInvoiceItem): void,
+    onChangePriceWithoutTax(priceWithoutTax, item: IInvoiceItem): void,
+    onChangeTax(tax_percent, item: IInvoiceItem): void,
+    onChangeName(name, item): void,
     onAddRowItem(item: IInvoiceItem): void,
+    handleRemoveRowItem(item: IInvoiceItem): void
     items: Array<IInvoiceItem>,
     client?: IClient,
     taxes: Array<ITaX>,
-    count: number,
-    price_without_tax: number,
-    tax_percent: number,
 }
 
 export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
 
-    calculatePriceWithTax = (): number => {
-        return ( 100 + this.props.tax_percent) * this.props.price_without_tax / 100;
+    calculatePriceWithTax = (item: IInvoiceItem): number => {
+        return ( 100 + item.tax_percent) * item.price_without_tax / 100;
     };
+
+    calculateTotalPrice = (item: IInvoiceItem): number => {
+        const totalPrice= (( 100 + item.tax_percent) * item.price_without_tax / 100) * item.count;
+        return totalPrice;
+    };
+
 
     render(){
         return(
@@ -61,6 +65,7 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
                                         <Form.Control
                                             type="text"
                                             name="name"
+                                            onChange={(e) => {this.handleChangeName(e, item)}}
                                         />
                                     </Col>
                                     <Col>
@@ -68,7 +73,8 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
                                         <Form.Control
                                             type="number"
                                             name="count"
-                                            onChange={this.handleChangeCount}
+                                            min={1}
+                                            onChange={(e) => {this.handleChangeCount(e, item)}}
                                         />
                                     </Col>
                                     <Col>
@@ -76,7 +82,7 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
                                         <Form.Control
                                             type="text"
                                             name="priceWithoutTax"
-                                            onChange={this.handleChangePriceWithoutTax}
+                                            onChange={(e) => {this.handleChangePriceWithoutTax(e, item)}}
                                         />
 
                                     </Col>
@@ -86,7 +92,7 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
                                         <Form.Control
                                             as="select"
                                             name="taxSelect"
-                                            onChange={this.handleChangeTax}
+                                            onChange={(e) => {this.handleChangeTax(e, item)  }}
                                         >
                                             {this.props.taxes.map((tax: ITaX) => {
                                                 return ( <option value={tax.percent}>{tax.percent} - {tax.name}</option>);
@@ -99,7 +105,7 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
                                             readOnly
                                             type="text"
                                             name="priceWithTax"
-                                            value={(this.calculatePriceWithTax()).toString()}
+                                            value={(this.calculatePriceWithTax(item)).toString()}
                                         />
                                     </Col>
                                     <Col>
@@ -107,12 +113,11 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
                                         <Form.Control
                                             readOnly
                                             name="priceTotal"
-                                            value={(this.props.count * this.calculatePriceWithTax()).toString()}
-                                            onChange={this.handleChangeTotalPrice}
+                                            value={(this.calculateTotalPrice(item)).toString()}
                                         />
                                     </Col>
                                     <Col className={'position-bottom'}>
-                                        <Button className={'margin-left'} variant={'danger'}>
+                                        <Button className={'margin-left'} variant={'danger'} onClick={(e) => this.props.handleRemoveRowItem(item)}>
                                             Odebrat položku
                                         </Button>
                                     </Col>
@@ -136,44 +141,32 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
     handleSubmit= (e) => {
         e.preventDefault();
 
-        const item= {
-            name: e.target.elements['name'].value,
-            count: e.target.elements['count'].value,
-            price_without_tax: e.target.elements['priceWithoutTax'].value,
-            price_with_tax: e.target.elements['priceWithTax'].value,
-            tax_percent: e.target.elements['taxSelect'].value
-
-        };
-
         const invoice = {
             client: this.props.client,
-            items:[
-                item,
-            ]
+            items: this.props.items,
         };
        this.props.onSubmit(invoice);
        location.replace("http://localhost/react-invoice/www/listingInvoices.html")
     };
 
-    handleChangeCount= (e) => {
-        const count= e.target.value;
-        this.props.onChangeCount(count);
+    handleChangeCount= (e, item) => {
+        const count = Number(e.target.value);
+        this.props.onChangeCount(count, item);
     };
 
-    handleChangePriceWithoutTax= (e) => {
+    handleChangePriceWithoutTax= (e, item) => {
         const price_without_tax= e.target.value;
-        this.props.onChangePriceWithoutTax(price_without_tax);
+        this.props.onChangePriceWithoutTax(price_without_tax, item);
     };
 
-    handleChangeTax= (e) => {
+    handleChangeTax= (e, item) => {
         const tax_percent= Number(e.target.value);
-        this.props.onChangeTax(tax_percent);
+        this.props.onChangeTax(tax_percent, item);
     };
 
-
-    handleChangeTotalPrice= (e) => {
-        const total_price= e.target.value;
-        this.props.onChangeTotalPrice(total_price);
+    handleChangeName= (e, item) => {
+        const name= e.target.value;
+        this.props.onChangeName(name, item);
     };
 
     handleAddRowItem= (e) => {
@@ -184,7 +177,6 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
             price_with_tax: 0,
             tax_percent: 0,
         };
-        console.log(item);
         this.props.onAddRowItem(item);
     };
 

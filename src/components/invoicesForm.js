@@ -7,42 +7,37 @@ library.add(faPlus);
 export class InvoiceForm extends React.Component {
     constructor() {
         super(...arguments);
-        this.calculatePriceWithTax = () => {
-            return (100 + this.props.tax_percent) * this.props.price_without_tax / 100;
+        this.calculatePriceWithTax = (item) => {
+            return (100 + item.tax_percent) * item.price_without_tax / 100;
+        };
+        this.calculateTotalPrice = (item) => {
+            const totalPrice = ((100 + item.tax_percent) * item.price_without_tax / 100) * item.count;
+            return totalPrice;
         };
         this.handleSubmit = (e) => {
             e.preventDefault();
-            const item = {
-                name: e.target.elements['name'].value,
-                count: e.target.elements['count'].value,
-                price_without_tax: e.target.elements['priceWithoutTax'].value,
-                price_with_tax: e.target.elements['priceWithTax'].value,
-                tax_percent: e.target.elements['taxSelect'].value
-            };
             const invoice = {
                 client: this.props.client,
-                items: [
-                    item,
-                ]
+                items: this.props.items,
             };
             this.props.onSubmit(invoice);
             location.replace("http://localhost/react-invoice/www/listingInvoices.html");
         };
-        this.handleChangeCount = (e) => {
-            const count = e.target.value;
-            this.props.onChangeCount(count);
+        this.handleChangeCount = (e, item) => {
+            const count = Number(e.target.value);
+            this.props.onChangeCount(count, item);
         };
-        this.handleChangePriceWithoutTax = (e) => {
+        this.handleChangePriceWithoutTax = (e, item) => {
             const price_without_tax = e.target.value;
-            this.props.onChangePriceWithoutTax(price_without_tax);
+            this.props.onChangePriceWithoutTax(price_without_tax, item);
         };
-        this.handleChangeTax = (e) => {
+        this.handleChangeTax = (e, item) => {
             const tax_percent = Number(e.target.value);
-            this.props.onChangeTax(tax_percent);
+            this.props.onChangeTax(tax_percent, item);
         };
-        this.handleChangeTotalPrice = (e) => {
-            const total_price = e.target.value;
-            this.props.onChangeTotalPrice(total_price);
+        this.handleChangeName = (e, item) => {
+            const name = e.target.value;
+            this.props.onChangeName(name, item);
         };
         this.handleAddRowItem = (e) => {
             const item = {
@@ -52,7 +47,6 @@ export class InvoiceForm extends React.Component {
                 price_with_tax: 0,
                 tax_percent: 0,
             };
-            console.log(item);
             this.props.onAddRowItem(item);
         };
     }
@@ -73,16 +67,16 @@ export class InvoiceForm extends React.Component {
                     return (React.createElement(Row, { className: 'margin-top' },
                         React.createElement(Col, null,
                             React.createElement(Form.Label, null, "N\u00E1zev:"),
-                            React.createElement(Form.Control, { type: "text", name: "name" })),
+                            React.createElement(Form.Control, { type: "text", name: "name", onChange: (e) => { this.handleChangeName(e, item); } })),
                         React.createElement(Col, null,
                             React.createElement(Form.Label, null, "Po\u010Det:"),
-                            React.createElement(Form.Control, { type: "number", name: "count", onChange: this.handleChangeCount })),
+                            React.createElement(Form.Control, { type: "number", name: "count", min: 1, onChange: (e) => { this.handleChangeCount(e, item); } })),
                         React.createElement(Col, null,
                             React.createElement(Form.Label, null, "Cena bez DPH:"),
-                            React.createElement(Form.Control, { type: "text", name: "priceWithoutTax", onChange: this.handleChangePriceWithoutTax })),
+                            React.createElement(Form.Control, { type: "text", name: "priceWithoutTax", onChange: (e) => { this.handleChangePriceWithoutTax(e, item); } })),
                         React.createElement(Col, null,
                             React.createElement(Form.Label, null, "Sazba dan\u011B:"),
-                            React.createElement(Form.Control, { as: "select", name: "taxSelect", onChange: this.handleChangeTax }, this.props.taxes.map((tax) => {
+                            React.createElement(Form.Control, { as: "select", name: "taxSelect", onChange: (e) => { this.handleChangeTax(e, item); } }, this.props.taxes.map((tax) => {
                                 return (React.createElement("option", { value: tax.percent },
                                     tax.percent,
                                     " - ",
@@ -90,12 +84,12 @@ export class InvoiceForm extends React.Component {
                             }))),
                         React.createElement(Col, null,
                             React.createElement(Form.Label, null, "Cena s DPH:"),
-                            React.createElement(Form.Control, { readOnly: true, type: "text", name: "priceWithTax", value: (this.calculatePriceWithTax()).toString() })),
+                            React.createElement(Form.Control, { readOnly: true, type: "text", name: "priceWithTax", value: (this.calculatePriceWithTax(item)).toString() })),
                         React.createElement(Col, null,
                             React.createElement(Form.Label, null, "Cena celkem:"),
-                            React.createElement(Form.Control, { readOnly: true, name: "priceTotal", value: (this.props.count * this.calculatePriceWithTax()).toString(), onChange: this.handleChangeTotalPrice })),
+                            React.createElement(Form.Control, { readOnly: true, name: "priceTotal", value: (this.calculateTotalPrice(item)).toString() })),
                         React.createElement(Col, { className: 'position-bottom' },
-                            React.createElement(Button, { className: 'margin-left', variant: 'danger' }, "Odebrat polo\u017Eku"))));
+                            React.createElement(Button, { className: 'margin-left', variant: 'danger', onClick: (e) => this.props.handleRemoveRowItem(item) }, "Odebrat polo\u017Eku"))));
                 }),
                 React.createElement("div", { className: 'text-align-r margin-top' },
                     React.createElement(Button, { className: 'margin-right', onClick: this.handleAddRowItem }, "P\u0159idat polo\u017Eku"),

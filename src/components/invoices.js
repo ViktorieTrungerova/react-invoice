@@ -2,6 +2,7 @@ import * as React from "react";
 import { invoiceClient } from "../invoiceClient";
 import { InvoiceForm } from "./invoicesForm";
 import { Container, Modal } from "react-bootstrap";
+import PNotify from 'pnotify/dist/es/PNotify';
 import { ClientList } from "./clientList";
 export class Invoices extends React.Component {
     constructor(props, context) {
@@ -20,30 +21,63 @@ export class Invoices extends React.Component {
         };
         this.handleSaveInvoice = (invoice) => {
             this.invoiceClient.saveInvoice(invoice);
+            console.log(invoice);
         };
-        this.handleSetCount = (count) => {
-            this.setState({
-                count: count
+        this.handleSetCount = (count, item) => {
+            this.state.items.map((stateItem, index) => {
+                if (item === stateItem) {
+                    this.state.items[index].count = count;
+                }
             });
+            this.setState(this.state);
         };
-        this.handleSetPriceWithoutTax = (price_without_tax) => {
-            this.setState({
-                price_without_tax: price_without_tax,
+        this.handleSetPriceWithoutTax = (price_without_tax, item) => {
+            this.state.items.map((stateItem, index) => {
+                if (item === stateItem) {
+                    this.state.items[index].price_without_tax = price_without_tax;
+                }
             });
+            this.setState(this.state);
         };
-        this.handleSetTax = (tax_percent) => {
-            this.setState({
-                tax_percent: tax_percent,
+        this.handleSetTax = (tax_percent, item) => {
+            this.state.items.map((stateItem, index) => {
+                if (item === stateItem) {
+                    this.state.items[index].tax_percent = tax_percent;
+                }
             });
+            this.setState(this.state);
         };
-        this.handleSetTotalPrice = (total_price) => {
-            this.setState({
-                tax_percent: total_price,
+        this.handleSetName = (name, item) => {
+            this.state.items.map((stateItem, index) => {
+                if (item === stateItem) {
+                    this.state.items[index].name = name;
+                }
             });
+            this.setState(this.state);
         };
         this.handleAddRowItem = (item) => {
             this.state.items.push(item);
             this.setState(this.state);
+        };
+        this.handleRemoveRowItem = (item) => {
+            alert('Opravdu chtece položku odstranit?');
+            this.state.items.map((stateItem, index, array) => {
+                if (item === stateItem) {
+                    array.splice(index, 1);
+                }
+                this.setState(this.state);
+            });
+            PNotify.success({
+                text: "Položka byla odebrána",
+                type: 'notice',
+                delay: 2000,
+                stack: {
+                    "dir1": "up",
+                    "dir2": "left",
+                    "firstpos1": 50,
+                    "firstpos2": 25
+                }
+            });
         };
         this.invoiceClient = new invoiceClient('http://localhost/react-invoice/www');
         this.invoiceClient.getTaxes().then((taxes) => {
@@ -64,7 +98,7 @@ export class Invoices extends React.Component {
             count: 0,
             price_without_tax: 0,
             tax_percent: 0,
-            total_price: 0,
+            name: '',
         };
     }
     render() {
@@ -72,7 +106,7 @@ export class Invoices extends React.Component {
             return;
         return (React.createElement("div", null,
             React.createElement(Container, { className: 'page-content' },
-                React.createElement(InvoiceForm, { onSearchClient: this.handleShow, client: this.state.client, taxes: this.state.taxes, onSubmit: this.handleSaveInvoice, onChangeCount: this.handleSetCount, onChangePriceWithoutTax: this.handleSetPriceWithoutTax, onAddRowItem: this.handleAddRowItem, count: this.state.count, price_without_tax: this.state.price_without_tax, tax_percent: this.state.tax_percent, onChangeTax: this.handleSetTax, onChangeTotalPrice: this.handleSetTotalPrice, items: this.state.items }),
+                React.createElement(InvoiceForm, { onSearchClient: this.handleShow, client: this.state.client, taxes: this.state.taxes, onSubmit: this.handleSaveInvoice, onChangeCount: this.handleSetCount, onChangePriceWithoutTax: this.handleSetPriceWithoutTax, onAddRowItem: this.handleAddRowItem, onChangeName: this.handleSetName, handleRemoveRowItem: this.handleRemoveRowItem, onChangeTax: this.handleSetTax, items: this.state.items }),
                 React.createElement(Modal, { show: this.state.show, onHide: this.handleClose },
                     React.createElement(Modal.Header, { closeButton: true },
                         React.createElement(Modal.Title, null, "V\u00FDpis klient\u016F")),
