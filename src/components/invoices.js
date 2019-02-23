@@ -21,7 +21,6 @@ export class Invoices extends React.Component {
         };
         this.handleSaveInvoice = (invoice) => {
             this.invoiceClient.saveInvoice(invoice);
-            console.log(invoice);
         };
         this.handleSetCount = (count, item) => {
             this.state.items.map((stateItem, index) => {
@@ -60,7 +59,7 @@ export class Invoices extends React.Component {
             this.setState(this.state);
         };
         this.handleRemoveRowItem = (item) => {
-            alert('Opravdu chtece položku odstranit?');
+            alert('Opravdu chcete položku odstranit?');
             this.state.items.map((stateItem, index, array) => {
                 if (item === stateItem) {
                     array.splice(index, 1);

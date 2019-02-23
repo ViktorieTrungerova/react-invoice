@@ -30,13 +30,16 @@ CREATE TABLE `invoice` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 INSERT INTO `invoice` (`id`, `id_client`) VALUES
-(1,	1);
+(57,	1),
+(58,	1),
+(55,	2);
 
 DROP TABLE IF EXISTS `invoice_item`;
 CREATE TABLE `invoice_item` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `invoice_id` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `count` int(11) NOT NULL,
   `price_without_tax` decimal(10,0) NOT NULL,
   `price_with_tax` decimal(10,0) NOT NULL,
   `tax_percent` int(11) NOT NULL,
@@ -45,7 +48,9 @@ CREATE TABLE `invoice_item` (
   CONSTRAINT `invoice_item_ibfk_1` FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
-INSERT INTO `invoice_item` (`id`, `invoice_id`, `name`, `price_without_tax`, `price_with_tax`, `tax_percent`) VALUES
-(2,	1,	'1',	100,	121,	21);
+INSERT INTO `invoice_item` (`id`, `invoice_id`, `name`, `count`, `price_without_tax`, `price_with_tax`, `tax_percent`) VALUES
+(31,	55,	'rtservis',	100,	456,	0,	21),
+(33,	57,	'dfsa',	100,	456,	0,	15),
+(34,	58,	'dfsa',	100,	456,	0,	15);
 
--- 2019-02-09 13:29:52
+-- 2019-02-23 17:23:56

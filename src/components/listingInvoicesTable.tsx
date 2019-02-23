@@ -1,10 +1,11 @@
 import * as React from "react";
 import {Button, Col, Row, Table} from "react-bootstrap";
-import {IClient, IInvoice} from "../invoiceClient";
+import {IInvoice} from "../invoiceClient";
 
 
 export interface IInvoiceTableProps {
     invoices: Array<IInvoice>,
+    handleRemoveInvoice(invoice: IInvoice): void,
 }
 
 export class ListingInvoicesTable extends React.Component<IInvoiceTableProps, {}> {
@@ -36,7 +37,7 @@ export class ListingInvoicesTable extends React.Component<IInvoiceTableProps, {}
                                         <Button>
                                         Detail
                                         </Button>
-                                        <Button className={'margin-left'} variant={'danger'}>
+                                        <Button className={'margin-left'} variant={'danger'} onClick={(e) => this.props.handleRemoveInvoice(invoice)}>
                                             Smazat
                                         </Button>
                                         </td>

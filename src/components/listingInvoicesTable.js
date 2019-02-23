@@ -27,7 +27,7 @@ export class ListingInvoicesTable extends React.Component {
                                     invoice.client.email),
                                 React.createElement("td", { className: 'text-align-center' },
                                     React.createElement(Button, null, "Detail"),
-                                    React.createElement(Button, { className: 'margin-left', variant: 'danger' }, "Smazat"))));
+                                    React.createElement(Button, { className: 'margin-left', variant: 'danger', onClick: (e) => this.props.handleRemoveInvoice(invoice) }, "Smazat"))));
                         })))))));
     }
     ;
