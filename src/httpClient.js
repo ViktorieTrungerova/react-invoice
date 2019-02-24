@@ -32,7 +32,6 @@ export default class HttpClient {
     sendPostRequest(url, args) {
         let self = this;
         return new Promise(function (reseolve, reject) {
-            console.log(args);
             request
                 .post(self.baseUrl + url)
                 .query(args)

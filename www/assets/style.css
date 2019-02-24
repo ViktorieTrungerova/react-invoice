@@ -7,6 +7,10 @@
     margin-top: 1rem;
 }
 
+.margin-bottom {
+    margin-bottom: 1rem;
+}
+
 .margin-left {
     margin-left: 1rem;
 }
@@ -36,5 +40,10 @@
 .position-bottom {
     display: flex;
     align-items: flex-end;
+}
+
+.width-50 {
+    width: 50%;
+    max-width: 50%;
 }
 

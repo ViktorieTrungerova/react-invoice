@@ -27,6 +27,15 @@ export class ListingInvoices extends React.Component {
                 }
             });
         };
+        this.handleDetailInvoice = (invoice) => {
+            this.state.invoices.map((stateInvoice) => {
+                if (invoice === stateInvoice) {
+                    this.invoiceClient.getInvoice(invoice.id);
+                }
+                this.setState(this.state);
+                location.replace("http://localhost/react-invoice/www/detailInvoice.html?id=" + invoice.id);
+            });
+        };
         this.invoiceClient = new invoiceClient('http://localhost/react-invoice/www');
         this.invoiceClient.getAllInvoices().then((invoices) => {
             this.setState({
@@ -44,6 +53,6 @@ export class ListingInvoices extends React.Component {
                     React.createElement("h1", null, "V\u00FDpis faktur")),
                 React.createElement(Col, { className: 'text-align-r' },
                     React.createElement(Button, { href: 'http://localhost/react-invoice/www/index.html', variant: "primary" }, "P\u0159idat fakturu"))),
-            React.createElement(ListingInvoicesTable, { invoices: this.state.invoices, handleRemoveInvoice: this.handleRemoveInvoice })));
+            React.createElement(ListingInvoicesTable, { invoices: this.state.invoices, handleRemoveInvoice: this.handleRemoveInvoice, handleDetailInvoice: this.handleDetailInvoice })));
     }
 }

@@ -6,6 +6,7 @@ import {IInvoice} from "../invoiceClient";
 export interface IInvoiceTableProps {
     invoices: Array<IInvoice>,
     handleRemoveInvoice(invoice: IInvoice): void,
+    handleDetailInvoice(invoice: IInvoice): void,
 }
 
 export class ListingInvoicesTable extends React.Component<IInvoiceTableProps, {}> {
@@ -34,7 +35,7 @@ export class ListingInvoicesTable extends React.Component<IInvoiceTableProps, {}
                                         <td> {invoice.client.phone}</td>
                                         <td> {invoice.client.email}</td>
                                         <td className={'text-align-center'}>
-                                        <Button>
+                                        <Button onClick={(e) => this.props.handleDetailInvoice(invoice)}>
                                         Detail
                                         </Button>
                                         <Button className={'margin-left'} variant={'danger'} onClick={(e) => this.props.handleRemoveInvoice(invoice)}>

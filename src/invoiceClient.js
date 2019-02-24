@@ -40,11 +40,11 @@ export class invoiceClient {
                 invoiceItems.push({
                     id: invoiceItemData['id'],
                     invoice_id: invoiceItemData['invoice_id'],
-                    items_name: invoiceItemData['name'],
+                    name: invoiceItemData['name'],
                     count: invoiceItemData['count'],
-                    priceWithoutTax: invoiceItemData['price_without_tax'],
-                    priceWithTax: invoiceItemData['price_with_tax'],
-                    taxPercent: invoiceItemData['tax_percent'],
+                    price_without_tax: invoiceItemData['price_without_tax'],
+                    price_with_tax: invoiceItemData['price_with_tax'],
+                    tax_percent: invoiceItemData['tax_percent'],
                 });
             }
             let invoice = {
@@ -75,11 +75,11 @@ export class invoiceClient {
                     invoiceItems.push({
                         id: invoiceItemData['id'],
                         invoice_id: invoiceItemData['invoice_id'],
-                        items_name: invoiceItemData['name'],
+                        name: invoiceItemData['name'],
                         count: invoiceItemData['count'],
-                        priceWithoutTax: invoiceItemData['price_without_tax'],
-                        priceWithTax: invoiceItemData['price_with_tax'],
-                        taxPercent: invoiceItemData['tax_percent'],
+                        price_without_tax: invoiceItemData['price_without_tax'],
+                        price_with_tax: invoiceItemData['price_with_tax'],
+                        tax_percent: invoiceItemData['tax_percent'],
                     });
                 }
                 invoices.push({

@@ -39,7 +39,7 @@ export class ListingInvoices extends React.Component<{}, IListingInvoicesState> 
                         <Button href={'http://localhost/react-invoice/www/index.html'} variant="primary">Přidat fakturu</Button>
                     </Col>
                 </Row>
-                <ListingInvoicesTable invoices={this.state.invoices} handleRemoveInvoice={this.handleRemoveInvoice}/>
+                <ListingInvoicesTable invoices={this.state.invoices} handleRemoveInvoice={this.handleRemoveInvoice} handleDetailInvoice={this.handleDetailInvoice}/>
             </Container>
 
         );
@@ -66,6 +66,17 @@ export class ListingInvoices extends React.Component<{}, IListingInvoicesState> 
                 "firstpos2": 25
             }
         });
+    };
+
+    handleDetailInvoice= (invoice: IInvoice) => {
+        this.state.invoices.map((stateInvoice: IInvoice) => {
+            if (invoice === stateInvoice) {
+               this.invoiceClient.getInvoice(invoice.id);
+            }
+            this.setState(this.state);
+            location.replace("http://localhost/react-invoice/www/detailInvoice.html?id=" + invoice.id)
+        });
+
     };
     }
 
