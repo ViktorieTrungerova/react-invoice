@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
 import {library} from "@fortawesome/fontawesome-svg-core";
 import {IClient, IInvoice, ITaX, IInvoiceItem} from "../invoiceClient";
+import { ValidationForm, TextInput, SelectGroup, Checkbox, Radio } from "react-bootstrap4-form-validation";
 
 library.add(faPlus);
 
@@ -37,14 +38,15 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
         return(
             <div>
                 <h1>Přidání faktury</h1>
-                <Form className={'form'} onSubmit={this.handleSubmit}>
+                <ValidationForm className={'form'} onSubmit={this.handleSubmit} >
                     <Form.Group>
                         <Row>
                             <Col>
-                                <Form.Label>Klient:</Form.Label>
-                                <Form.Control readOnly
+                                <Form.Label htmlFor="client">Klient:</Form.Label>
+                                <TextInput    readOnly
                                               defaultValue={this.props.client ? (this.props.client.first_name + ' ' + this.props.client.last_name) : ''}
                                               name="client"
+                                              id="client"
                                 />
                             </Col>
                             <Col className={'btn-add-client'}>
@@ -61,58 +63,78 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
                         return(
                                 <Row className={'margin-top'}>
                                     <Col>
-                                        <Form.Label>Název:</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            name="name"
-                                            onChange={(e) => {this.handleChangeName(e, item)}}
-                                        />
+                                        <Form.Group>
+                                            <Form.Label  htmlFor="name">Název:</Form.Label>
+                                            <TextInput
+                                                type="text"
+                                                name="name"
+                                                id="name"
+                                                required
+                                                errorMessage="Vyplňte název."
+                                                onChange={(e) => {this.handleChangeName(e, item)}}
+                                            />
+                                        </Form.Group>
                                     </Col>
                                     <Col>
-                                        <Form.Label>Počet:</Form.Label>
-                                        <Form.Control
+                                        <Form.Group>
+                                        <Form.Label htmlFor="count">Počet:</Form.Label>
+                                        <TextInput
                                             type="number"
                                             name="count"
+                                            id="count"
                                             min={1}
+                                            required
+                                            errorMessage="Vyplňte počet."
                                             onChange={(e) => {this.handleChangeCount(e, item)}}
                                         />
+                                        </Form.Group>
                                     </Col>
                                     <Col>
-                                        <Form.Label>Cena bez DPH:</Form.Label>
-                                        <Form.Control
+                                        <Form.Group>
+                                        <Form.Label htmlFor="priceWithoutTax">Cena bez DPH:</Form.Label>
+                                        <TextInput
                                             type="text"
                                             name="priceWithoutTax"
+                                            id="priceWithoutTax"
+                                            required
+                                            errorMessage="Vyplňte cenu bez DPH."
                                             onChange={(e) => {this.handleChangePriceWithoutTax(e, item)}}
                                         />
-
+                                        </Form.Group>
                                     </Col>
                                     <Col>
-                                        <Form.Label>Sazba daně:</Form.Label>
-
-                                        <Form.Control
+                                        <Form.Group>
+                                        <Form.Label htmlFor="taxSelect">Sazba daně:</Form.Label>
+                                        <SelectGroup
                                             as="select"
                                             name="taxSelect"
+                                            id="taxSelect"
                                             onChange={(e) => {this.handleChangeTax(e, item)  }}
+                                            required errorMessage="Vyberte sazbu daně."
                                         >
+                                            <option value="">---Vybrat---</option>
                                             {this.props.taxes.map((tax: ITaX) => {
                                                 return ( <option value={tax.percent}>{tax.percent} - {tax.name}</option>);
                                             })}
-                                        </Form.Control>
+                                        </SelectGroup>
+                                        </Form.Group>
                                     </Col>
                                     <Col>
-                                        <Form.Label>Cena s DPH:</Form.Label>
+                                        <Form.Label htmlFor="priceWithTax">Cena s DPH:</Form.Label>
                                         <Form.Control
                                             readOnly
                                             type="text"
                                             name="priceWithTax"
+                                            id="priceWithTax"
                                             value={(this.calculatePriceWithTax(item)).toString()}
                                         />
                                     </Col>
                                     <Col>
-                                        <Form.Label>Cena celkem:</Form.Label>
+                                        <Form.Label htmlFor="priceWithTax">Cena celkem:</Form.Label>
                                         <Form.Control
                                             readOnly
                                             name="priceTotal"
+                                            id="priceTotal"
                                             value={(this.calculateTotalPrice(item)).toString()}
                                         />
                                     </Col>
@@ -132,14 +154,15 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
                             Uložit
                         </Button>
                     </div>
-                </Form>
+                </ValidationForm>
             </div>
 
         );
     };
 
-    handleSubmit= (e) => {
+    handleSubmit= (e, formData, inputs) => {
         e.preventDefault();
+        console.log(e, formData, inputs);
 
         const invoice = {
             client: this.props.client,
