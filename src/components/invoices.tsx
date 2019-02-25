@@ -29,12 +29,16 @@ export class Invoices extends React.Component<{}, IInvoicesState> {
             this.setState({
                 taxes: taxes,
             });
+        }).catch(()=> {
+            alert('Něco se pokazilo.');
         });
 
         this.invoiceClient.getClients().then( (clients: Array<IClient>) => {
             this.setState({
                 clients: clients,
             });
+        }).catch(()=> {
+            alert('Něco se pokazilo.');
         });
 
         this.state = {
@@ -148,7 +152,6 @@ export class Invoices extends React.Component<{}, IInvoicesState> {
     };
 
     handleRemoveRowItem= (item: IInvoiceItem) => {
-        alert('Opravdu chcete položku odstranit?');
         this.state.items.map((stateItem: IInvoiceItem, index, array) => {
             if (item === stateItem) {
                 array.splice(index, 1);

@@ -1,6 +1,7 @@
 import * as React from "react";
-import { Container, Table } from "react-bootstrap";
+import { Button, Col, Container, Row, Table } from "react-bootstrap";
 import { invoiceClient } from "../invoiceClient";
+import NumberFormat from 'react-number-format';
 export class DetailInvoice extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -38,7 +39,11 @@ export class DetailInvoice extends React.Component {
             return '';
         return (React.createElement(Container, { className: 'margin-top' }, this.state.invoice &&
             React.createElement("div", null,
-                React.createElement("h1", { className: 'margin-bottom' }, "Detail Faktury"),
+                React.createElement(Row, null,
+                    React.createElement(Col, null,
+                        React.createElement("h1", { className: 'margin-bottom' }, "Detail Faktury")),
+                    React.createElement(Col, { className: 'text-align-r' },
+                        React.createElement(Button, { href: 'http://localhost/react-invoice/www/listingInvoices.html', variant: "primary" }, "V\u00FDpis faktur"))),
                 React.createElement("h3", null, "Odb\u011Bratel:"),
                 React.createElement(Table, { className: 'width-50' },
                     React.createElement("tbody", null,
@@ -54,7 +59,7 @@ export class DetailInvoice extends React.Component {
                         React.createElement("tr", null,
                             React.createElement("th", null, "Email:"),
                             React.createElement("td", null, this.state.invoice.client.email)))),
-                React.createElement("h3", null, "Polo\u017Eky faktury"),
+                React.createElement("h3", null, "Polo\u017Eky faktury:"),
                 React.createElement(Table, null,
                     React.createElement("thead", null,
                         React.createElement("tr", null,
@@ -67,11 +72,16 @@ export class DetailInvoice extends React.Component {
                     React.createElement("tbody", null, this.state.invoice.items.map((item) => {
                         return (React.createElement("tr", null,
                             React.createElement("td", null, item.name),
-                            React.createElement("td", null, item.count),
-                            React.createElement("td", null, item.price_without_tax),
-                            React.createElement("td", null, item.tax_percent),
-                            React.createElement("td", null, (this.calculatePriceWithTax(item)).toString()),
-                            React.createElement("td", null, (this.calculateTotalPrice(item)).toString())));
+                            React.createElement("td", null,
+                                React.createElement(NumberFormat, { value: item.count, displayType: 'text', thousandSeparator: true, suffix: ' Ks' })),
+                            React.createElement("td", null,
+                                React.createElement(NumberFormat, { value: item.price_without_tax, displayType: 'text', thousandSeparator: ' ', suffix: ' Kč' })),
+                            React.createElement("td", null,
+                                React.createElement(NumberFormat, { value: item.tax_percent, displayType: 'text', thousandSeparator: true, suffix: ' %' })),
+                            React.createElement("td", null,
+                                React.createElement(NumberFormat, { value: (this.calculatePriceWithTax(item)).toFixed(2).toString(), displayType: 'text', thousandSeparator: ' ', suffix: ' Kč' })),
+                            React.createElement("td", null,
+                                React.createElement(NumberFormat, { value: (this.calculateTotalPrice(item)).toFixed(2).toString(), displayType: 'text', thousandSeparator: ' ', suffix: ' Kč' }))));
                     }))))));
     }
 }

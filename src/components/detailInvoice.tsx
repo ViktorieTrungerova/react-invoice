@@ -1,6 +1,7 @@
 import * as React from "react";
-import {Container, Table} from "react-bootstrap";
+import {Button, Col, Container, Row, Table} from "react-bootstrap";
 import {IInvoice, IInvoiceItem, invoiceClient} from "../invoiceClient";
+import NumberFormat from 'react-number-format';
 
 
 interface IDetailInvoiceState {
@@ -33,7 +34,14 @@ export class DetailInvoice extends React.Component<{}, IDetailInvoiceState> {
             <Container className={'margin-top'}>
                 {this.state.invoice &&
                     <div>
-                        <h1 className={'margin-bottom'}>Detail Faktury</h1>
+                        <Row>
+                            <Col>
+                                <h1 className={'margin-bottom'}>Detail Faktury</h1>
+                            </Col>
+                            <Col className={'text-align-r'}>
+                                <Button href={'http://localhost/react-invoice/www/listingInvoices.html'} variant="primary">Výpis faktur</Button>
+                            </Col>
+                        </Row>
                         <h3>
                             Odběratel:
                         </h3>
@@ -59,7 +67,7 @@ export class DetailInvoice extends React.Component<{}, IDetailInvoiceState> {
                         </Table>
 
                         <h3>
-                            Položky faktury
+                            Položky faktury:
                         </h3>
                         <Table>
                                 <thead>
@@ -77,11 +85,21 @@ export class DetailInvoice extends React.Component<{}, IDetailInvoiceState> {
                                     return(
                                         <tr>
                                         <td>{item.name}</td>
-                                        <td>{item.count}</td>
-                                        <td>{item.price_without_tax}</td>
-                                        <td>{item.tax_percent}</td>
-                                        <td>{(this.calculatePriceWithTax(item)).toString()}</td>
-                                        <td>{(this.calculateTotalPrice(item)).toString()}</td>
+                                        <td>
+                                            <NumberFormat value={item.count} displayType={'text'} thousandSeparator={true} suffix={' Ks'}/>
+                                        </td>
+                                        <td>
+                                            <NumberFormat value={item.price_without_tax} displayType={'text'} thousandSeparator={' '} suffix={' Kč'}/>
+                                         </td>
+                                        <td>
+                                            <NumberFormat value={item.tax_percent} displayType={'text'} thousandSeparator={true} suffix={' %'}/>
+                                        </td>
+                                        <td>
+                                            <NumberFormat value={(this.calculatePriceWithTax(item)).toFixed(2).toString()} displayType={'text'} thousandSeparator={' '} suffix={' Kč'}/>
+                                        </td>
+                                        <td>
+                                            <NumberFormat value={(this.calculateTotalPrice(item)).toFixed(2).toString()} displayType={'text'} thousandSeparator={' '} suffix={' Kč'}/>
+                                         </td>
                                     </tr>);
 
                                 })}

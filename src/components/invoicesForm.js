@@ -64,7 +64,11 @@ export class InvoiceForm extends React.Component {
                         React.createElement(Col, { className: 'btn-add-client' },
                             React.createElement("div", { className: 'text-align-r' },
                                 React.createElement(Button, { variant: "primary", onClick: this.props.onSearchClient },
-                                    React.createElement(FontAwesomeIcon, { icon: "plus" })))))),
+                                    React.createElement(FontAwesomeIcon, { icon: "plus" })))),
+                        React.createElement(Col, { className: 'buttons' },
+                            React.createElement("div", { className: 'text-align-r margin-top' },
+                                React.createElement(Button, { className: 'margin-right', onClick: this.handleAddRowItem }, "P\u0159idat polo\u017Eku"),
+                                React.createElement(Button, { type: "submit" }, "Ulo\u017Eit fakturu"))))),
                 this.props.items.map((item) => {
                     return (React.createElement(Row, { className: 'margin-top' },
                         React.createElement(Col, null,
@@ -73,15 +77,15 @@ export class InvoiceForm extends React.Component {
                                 React.createElement(TextInput, { type: "text", name: "name", id: "name", required: true, errorMessage: "Vypl\u0148te n\u00E1zev.", onChange: (e) => { this.handleChangeName(e, item); } }))),
                         React.createElement(Col, null,
                             React.createElement(Form.Group, null,
-                                React.createElement(Form.Label, { htmlFor: "count" }, "Po\u010Det:"),
+                                React.createElement(Form.Label, { htmlFor: "count" }, "Po\u010Det v Ks:"),
                                 React.createElement(TextInput, { type: "number", name: "count", id: "count", min: 1, required: true, errorMessage: "Vypl\u0148te po\u010Det.", onChange: (e) => { this.handleChangeCount(e, item); } }))),
                         React.createElement(Col, null,
                             React.createElement(Form.Group, null,
-                                React.createElement(Form.Label, { htmlFor: "priceWithoutTax" }, "Cena bez DPH:"),
+                                React.createElement(Form.Label, { htmlFor: "priceWithoutTax" }, "Cena bez DPH v K\u010D:"),
                                 React.createElement(TextInput, { type: "text", name: "priceWithoutTax", id: "priceWithoutTax", required: true, errorMessage: "Vypl\u0148te cenu bez DPH.", onChange: (e) => { this.handleChangePriceWithoutTax(e, item); } }))),
                         React.createElement(Col, null,
                             React.createElement(Form.Group, null,
-                                React.createElement(Form.Label, { htmlFor: "taxSelect" }, "Sazba dan\u011B:"),
+                                React.createElement(Form.Label, { htmlFor: "taxSelect" }, "Sazba dan\u011B v %:"),
                                 React.createElement(SelectGroup, { as: "select", name: "taxSelect", id: "taxSelect", onChange: (e) => { this.handleChangeTax(e, item); }, required: true, errorMessage: "Vyberte sazbu dan\u011B." },
                                     React.createElement("option", { value: "" }, "---Vybrat---"),
                                     this.props.taxes.map((tax) => {
@@ -91,17 +95,14 @@ export class InvoiceForm extends React.Component {
                                             tax.name));
                                     })))),
                         React.createElement(Col, null,
-                            React.createElement(Form.Label, { htmlFor: "priceWithTax" }, "Cena s DPH:"),
+                            React.createElement(Form.Label, { htmlFor: "priceWithTax" }, "Cena s DPH v K\u010D:"),
                             React.createElement(Form.Control, { readOnly: true, type: "text", name: "priceWithTax", id: "priceWithTax", value: (this.calculatePriceWithTax(item)).toString() })),
                         React.createElement(Col, null,
-                            React.createElement(Form.Label, { htmlFor: "priceWithTax" }, "Cena celkem:"),
+                            React.createElement(Form.Label, { htmlFor: "priceWithTax" }, "Cena celkem v K\u010D:"),
                             React.createElement(Form.Control, { readOnly: true, name: "priceTotal", id: "priceTotal", value: (this.calculateTotalPrice(item)).toString() })),
-                        React.createElement(Col, { className: 'position-bottom' },
+                        React.createElement(Col, { className: 'position-center' },
                             React.createElement(Button, { className: 'margin-left', variant: 'danger', onClick: (e) => this.props.handleRemoveRowItem(item) }, "Odebrat polo\u017Eku"))));
-                }),
-                React.createElement("div", { className: 'text-align-r margin-top' },
-                    React.createElement(Button, { className: 'margin-right', onClick: this.handleAddRowItem }, "P\u0159idat polo\u017Eku"),
-                    React.createElement(Button, { type: "submit" }, "Ulo\u017Eit")))));
+                }))));
     }
     ;
 }

@@ -1,3 +1,7 @@
+body {
+    font-size: 14px;
+}
+
 .page-content {
     padding-top: 1rem;
     margin: auto;
@@ -33,13 +37,20 @@
     align-items: flex-end;
 }
 
+.buttons {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
 .btn-add-client button{
     padding: .65rem;
 }
 
-.position-bottom {
+.position-center {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
+    margin-top: 1rem;
 }
 
 .width-50 {

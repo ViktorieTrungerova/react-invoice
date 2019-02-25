@@ -56,6 +56,16 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
                                     </Button>
                                 </div>
                             </Col>
+                            <Col className={'buttons'}>
+                                <div  className={'text-align-r margin-top'}>
+                                    <Button className={'margin-right'} onClick={this.handleAddRowItem}>
+                                        Přidat položku
+                                    </Button>
+                                    <Button type="submit">
+                                        Uložit fakturu
+                                    </Button>
+                                </div>
+                            </Col>
                         </Row>
                     </Form.Group>
 
@@ -77,7 +87,7 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
                                     </Col>
                                     <Col>
                                         <Form.Group>
-                                        <Form.Label htmlFor="count">Počet:</Form.Label>
+                                        <Form.Label htmlFor="count">Počet v Ks:</Form.Label>
                                         <TextInput
                                             type="number"
                                             name="count"
@@ -91,7 +101,7 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
                                     </Col>
                                     <Col>
                                         <Form.Group>
-                                        <Form.Label htmlFor="priceWithoutTax">Cena bez DPH:</Form.Label>
+                                        <Form.Label htmlFor="priceWithoutTax">Cena bez DPH v Kč:</Form.Label>
                                         <TextInput
                                             type="text"
                                             name="priceWithoutTax"
@@ -104,7 +114,7 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
                                     </Col>
                                     <Col>
                                         <Form.Group>
-                                        <Form.Label htmlFor="taxSelect">Sazba daně:</Form.Label>
+                                        <Form.Label htmlFor="taxSelect">Sazba daně v %:</Form.Label>
                                         <SelectGroup
                                             as="select"
                                             name="taxSelect"
@@ -120,7 +130,7 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
                                         </Form.Group>
                                     </Col>
                                     <Col>
-                                        <Form.Label htmlFor="priceWithTax">Cena s DPH:</Form.Label>
+                                        <Form.Label htmlFor="priceWithTax">Cena s DPH v Kč:</Form.Label>
                                         <Form.Control
                                             readOnly
                                             type="text"
@@ -130,7 +140,7 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
                                         />
                                     </Col>
                                     <Col>
-                                        <Form.Label htmlFor="priceWithTax">Cena celkem:</Form.Label>
+                                        <Form.Label htmlFor="priceWithTax">Cena celkem v Kč:</Form.Label>
                                         <Form.Control
                                             readOnly
                                             name="priceTotal"
@@ -138,7 +148,7 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
                                             value={(this.calculateTotalPrice(item)).toString()}
                                         />
                                     </Col>
-                                    <Col className={'position-bottom'}>
+                                    <Col className={'position-center'}>
                                         <Button className={'margin-left'} variant={'danger'} onClick={(e) => this.props.handleRemoveRowItem(item)}>
                                             Odebrat položku
                                         </Button>
@@ -146,14 +156,6 @@ export class InvoiceForm extends React.Component<IInvoiceFormProps, {}> {
                                 </Row>
                         );
                     })}
-                    <div  className={'text-align-r margin-top'}>
-                        <Button className={'margin-right'} onClick={this.handleAddRowItem}>
-                            Přidat položku
-                        </Button>
-                        <Button type="submit">
-                            Uložit
-                        </Button>
-                    </div>
                 </ValidationForm>
             </div>
 

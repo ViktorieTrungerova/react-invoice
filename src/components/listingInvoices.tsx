@@ -21,7 +21,9 @@ export class ListingInvoices extends React.Component<{}, IListingInvoicesState> 
                 this.setState({
                     invoices: invoices,
                 });
-            });
+            }).catch(()=> {
+            alert('Něco se pokazilo.');
+        });
 
         this.state = {
             invoices: [],
@@ -46,7 +48,6 @@ export class ListingInvoices extends React.Component<{}, IListingInvoicesState> 
     }
 
     handleRemoveInvoice= (invoice: IInvoice) => {
-        alert('Opravdu chcete tuto fakturu odstranit?');
         this.state.invoices.map((stateInvoice: IInvoice, index,array) => {
             if (invoice === stateInvoice) {
                 this.invoiceClient.removeInvoice(invoice);
